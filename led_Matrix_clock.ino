@@ -43,6 +43,7 @@ int width = 5 + spacer; // The font width is 5 pixels
 
 void setup()
 {
+  Serial.begin(115200);
 	configTime(8 * 3600, 0, "pool.ntp.org", "2.cn.pool.ntp.org");
 	matrix.setIntensity(0);	     // Use a value between 0 and 15 for brightness
 	matrix.setRotation(0, 1);    // The first display is position upside down
@@ -86,6 +87,12 @@ void loop()
 	matrix.write(); // Send bitmap to display
 	delay(1000);
 	if (0 == count % 60) {
+    if (0 == count % 1800){
+          String strout = String("count is: ") + String(count, DEC);
+          Serial.println(strout);
+          configTime(8 * 3600, 0, "pool.ntp.org", "2.cn.pool.ntp.org");
+    }
+
 		display_message(time); // Display time in format 'Wed, Mar 01 16:03:20 2017
 	}
 }
@@ -132,10 +139,32 @@ void display_time(const char * str, bool displaycolon)
 			break;
 		}
 
-		if (2 == i && !displaycolon) {
-			continue;
-		}
-		matrix.drawBitmap(2 + i * 6, 0, bitmap, 8, 8, RED);
+		//if (2 == i && !displaycolon) {
+		//	continue;
+		//}
+		//matrix.drawBitmap(2 + i * 6, 0, bitmap, 8, 8, RED);
+
+    switch (i) {
+    case 0:
+      matrix.drawBitmap(2, 0, bitmap, 8, 8, RED);
+      break;
+    case 1:
+      matrix.drawBitmap(2 + 6, 0, bitmap, 8, 8, RED);
+      break;
+    case 2:
+      if (displaycolon){
+        matrix.drawBitmap(2 + 11, 0, bitmap, 8, 8, RED);
+      }
+      break;
+    case 3:
+      matrix.drawBitmap(2 + 16, 0, bitmap, 8, 8, RED);
+      break;
+    case 4:
+      matrix.drawBitmap(2 + 22, 0, bitmap, 8, 8, RED);
+      break;
+    default:
+      break;
+    }
 	}
 
 }
