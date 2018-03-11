@@ -43,13 +43,23 @@ int width = 5 + spacer; // The font width is 5 pixels
 
 void setup()
 {
-  Serial.begin(115200);
-	configTime(8 * 3600, 0, "pool.ntp.org", "2.cn.pool.ntp.org");
-	matrix.setIntensity(0);	     // Use a value between 0 and 15 for brightness
+	Serial.begin(115200);
+
+	matrix.setIntensity(1);	     // Use a value between 0 and 15 for brightness
 	matrix.setRotation(0, 1);    // The first display is position upside down
 	matrix.setRotation(1, 1);    // The first display is position upside down
 	matrix.setRotation(2, 1);    // The first display is position upside down
 	matrix.setRotation(3, 1);    // The first display is position upside down
+
+	//display test
+	display_time("88:88", showcolon);
+	matrix.write(); // Send bitmap to display
+	delay(2000);
+
+	//configTime use sntp update time and set RTC, and update every 1 hour by default;
+	configTime(8 * 3600, 0, "0.asia.pool.ntp.org", "1.asia.pool.ntp.org", "2.asia.pool.ntp.org");
+	//set sync time every 30 min
+	//sntp_set_update_delay(1800000);
 }
 
 void loop()
@@ -87,12 +97,6 @@ void loop()
 	matrix.write(); // Send bitmap to display
 	delay(1000);
 	if (0 == count % 60) {
-    if (0 == count % 1800){
-          String strout = String("count is: ") + String(count, DEC);
-          Serial.println(strout);
-          configTime(8 * 3600, 0, "pool.ntp.org", "2.cn.pool.ntp.org");
-    }
-
 		display_message(time); // Display time in format 'Wed, Mar 01 16:03:20 2017
 	}
 }
